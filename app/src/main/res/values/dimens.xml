@@ -1,0 +1,45 @@
+<resources>
+
+    <!-- used in activity_main empty view -->
+    <dimen name="empty_view_message_text_size">20sp</dimen>
+    <dimen name="empty_view_padding_top">20dp</dimen>
+    <dimen name="empty_view_image_width">150dp</dimen>
+    <dimen name="empty_view_image_height">150dp</dimen>
+    <dimen name="progress_bar_width">50dp</dimen>
+    <dimen name="progress_bar_height">50dp</dimen>
+    <dimen name="progress_bar_margin_top">30dp</dimen>
+
+
+    <!--movie_poster image dimensions used in item_list_main -->
+    <dimen name="movie_poster_width">185dp</dimen>
+    <dimen name="movie_poster_height">277dp</dimen>
+    <dimen name="movie_poster_no_preview_text">16sp</dimen>
+
+    <!-- movie detail dimensions -->
+    <dimen name="detail_header_title">26sp</dimen>
+    <dimen name="detail_content_description">16sp</dimen>
+    <dimen name="detail_content_text">18sp</dimen>
+    <dimen name="detail_margin_left">12dp</dimen>
+    <dimen name="detail_syn_padding_bottom">20dp</dimen>
+    <dimen name="detail_syn_padding_top">12dp</dimen>
+    <dimen name="padding_start_end_ll">21dp</dimen>
+    <dimen name="padding_bottom_ll">30dp</dimen>
+    <dimen name="padding_top_ll">12dp</dimen>
+    <dimen name="padding_poster_side_content">32dp</dimen>
+    <dimen name="detail_original_title_mr">10dp</dimen>
+    <dimen name="original_title_padding_top">21dp</dimen>
+    <dimen name="detail_general_padding">12dp</dimen>
+
+
+    <!-- movie detail line separator !-->
+    <dimen name="line_separator_width">100dp</dimen>
+    <dimen name="line_separator_height">1dp</dimen>
+
+
+    <!-- activity_movie_detail toolbar -->
+    <dimen name="detail_toolbar_min_h">120dp</dimen>
+    <dimen name="toolbar_elevation">4dp</dimen>
+
+
+
+</resources>

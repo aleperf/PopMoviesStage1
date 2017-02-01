@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#c62828</color>
+    <color name="colorPrimaryDark">#b71c1c</color>
+    <color name="colorAccent">#448AFF</color>
+
+    <color name="no_preview_text">#424242</color>
+
+    <!--RecyclerView background Color -->
+   <color name="home_background">#333333</color>
+    <!-- Empty View Home screen message  text color -->
+    <color name="empty_view_text">#FFFFFF</color>
+
+    <!--detail_activity.xml header color -->
+    <color name="detail_header_title">#FFFFFF</color>
+    <color name="line_separator">#ef5350</color>
+    <color name="detail_toolbar">#e53935</color>
+    <color name="detail_description_text">#A4A4A4</color>
+
+</resources>

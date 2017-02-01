@@ -1,0 +1,56 @@
+<resources>
+    <string name="app_name">Pop Movies</string>
+    <!-- - - - - - - - - - - -->
+    <!--Used by activity_main, home screen empty view  -->
+    <!-- - - - - - - - - - - -->
+    <string name="empty_view_message">Tons of great movies are waiting to be discovered.
+        Please check for a good connection and tap the pop corn picture to try a new search.</string>
+    <string name="toast_msg_empty_view">Pop Movies is Searching Again</string>
+
+    <!-- content descriptions -->
+    <string name="cd_logo">pop corn movie logo</string>
+    <string name="cd_movie_poster">movie poster</string>
+
+
+
+
+    <!-- - - - - - - - - - - -->
+    <!--Used by Preferences  -->
+    <!-- - - - - - - - - - - -->
+
+    <string name="pref_search_title">Search Movie By</string>
+    <string name="pref_search_top_rated_label">Top Rated</string>
+    <string name="pref_search_most_pop_label">Most Popular</string>
+    <string name="pref_search_key" translatable="false">search by</string>
+    <string name="pref_search_top_rated_value">query top rated</string>
+    <string name="pref_search_most_pop_value">query most popular</string>
+
+    <!-- - - - - - - - - - - -->
+    <!--Used by menu_main  -->
+    <!-- - - - - - - - - - - -->
+    <string name="action_settings">Settings</string>
+
+    <!-- - - - - - - - - - - -->
+    <!--Used by detail_activity -->
+    <!-- - - - - - - - - - - -->
+
+    <string name="date_description">Release Date</string>
+    <string name="rating_description">Rating</string>
+    <string name="synopsis_description">Synopsis</string>
+    <string name="original_title_description">Original Title</string>
+
+
+    <!-- - - - - - - - - - - -->
+    <!-- tools strings      !-->
+    <!-- - - - - - - - - - - -->
+     <string name="lorem_ipsum">Lorem ipsum dolor sit amet,
+        consectetur adipiscing elit, sed do eiusmod tempor
+        incididunt ut labore et dolore magna aliqua. Ut enim
+        ad minim veniam, quis nostrud exercitation ullamco laboris nisi</string>
+    <string name="tool_movie_title">Movie Title</string>
+    <string name="tool_original_title">A very original title</string>
+    <string name="tool_rating">8.1/10</string>
+    <string name="tool_date">Jan 7, 2017</string>
+
+
+</resources>

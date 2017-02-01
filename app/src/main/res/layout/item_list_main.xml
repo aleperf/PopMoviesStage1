@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/movie_poster"
+        android:layout_width="@dimen/movie_poster_width"
+        android:layout_height="@dimen/movie_poster_height"
+        android:contentDescription="@string/cd_movie_poster"
+        tools:src="@drawable/no_preview_pop" />
+
+    <TextView
+        android:id="@+id/title_no_image_preview"
+        style="@style/NoPreviewTile"
+        android:layout_width="@dimen/movie_poster_width"
+        android:layout_height="wrap_content"
+        tools:text="@string/tool_movie_title" />
+
+</FrameLayout>
