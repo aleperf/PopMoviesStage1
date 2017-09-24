@@ -3,7 +3,7 @@ package example.aleperf.com.popmovies.utilities;
 
 import android.net.Uri;
 import android.support.annotation.Nullable;
-import android.util.Log;
+
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,8 +75,8 @@ public class NetworkUtils {
     public static URL buildQueryURL(String queryRequest, int page){
         Uri requestUri = buildQueryUri(queryRequest, page);
         try{
-            URL url = new URL(requestUri.toString());
-            return url;
+            return  new URL(requestUri.toString());
+
         }catch(MalformedURLException e){
             e.printStackTrace();
             return null;
@@ -149,10 +149,8 @@ public class NetworkUtils {
      * @return the uri to the image
      */
     public static Uri buildImageUri(String imagePath){
-        Uri uri = Uri.parse(IMAGE_BASE_URL).buildUpon()
+        return  Uri.parse(IMAGE_BASE_URL).buildUpon()
                 .appendPath(IMAGE_FORMAT_W185).appendPath(imagePath).build();
-
-        return uri;
     }
 
 
