@@ -54,8 +54,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private List<Movie> mMovies;
     //true if there is a current loading in background
     private boolean mIsLoading = false;
-    //used to store the data already loaded
-    // private ArrayList<String> jsonPages = new ArrayList<>();
     //the last preference seen when this activity is visible
     private String mLastPreference;
 

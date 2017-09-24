@@ -3,6 +3,8 @@ package example.aleperf.com.popmovies.utilities;
 
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.util.Log;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;

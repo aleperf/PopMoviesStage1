@@ -3,18 +3,25 @@ package example.aleperf.com.popmovies;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
+
+import com.google.gson.annotations.SerializedName;
 
 
 public class Movie implements Parcelable {
 
-    final private static byte NO_IMAGE = 0;
-    final private static byte HAS_IMAGE = 1;
+
+    @SerializedName("original_title")
     final private String mOriginalTitle;
+    @SerializedName("title")
     final private String mTitle;
-    final private String mPosterPath;
+    @SerializedName("poster_path")
+    private String mPosterPath;
+    @SerializedName("overview")
     final private String mPlotSynopsis;
+    @SerializedName("vote_average")
     final private double mRating;
-    final private byte mHasImage;
+    @SerializedName("release_date")
     final private String mReleaseDate;
 
     //Constructor
@@ -24,11 +31,6 @@ public class Movie implements Parcelable {
         mOriginalTitle = originalTitle;
         mTitle = title;
         mPosterPath = path;
-        if (path.equals("null")) {
-            mHasImage = NO_IMAGE;
-        } else {
-            mHasImage = HAS_IMAGE;
-        }
         mPlotSynopsis = plot;
         mReleaseDate = date;
         this.mRating = rating;
@@ -41,7 +43,7 @@ public class Movie implements Parcelable {
         mPosterPath = in.readString();
         mPlotSynopsis = in.readString();
         mRating = in.readDouble();
-        mHasImage = in.readByte();
+
         mReleaseDate = in.readString();
     }
 
@@ -59,7 +61,7 @@ public class Movie implements Parcelable {
     }
 
     public String getPosterPath() {
-        return mPosterPath;
+        return mPosterPath.replace("/", "");
     }
 
     public String getReleaseDate() {
@@ -72,7 +74,10 @@ public class Movie implements Parcelable {
 
     public boolean hasImage() {
 
-        return mHasImage == HAS_IMAGE;
+      if(getPosterPath() == null){
+          return false;
+      }
+      return true;
     }
 
 
@@ -89,7 +94,6 @@ public class Movie implements Parcelable {
         parcel.writeString(mPosterPath);
         parcel.writeString(mPlotSynopsis);
         parcel.writeDouble(mRating);
-        parcel.writeByte(mHasImage);
         parcel.writeString(mReleaseDate);
 
     }

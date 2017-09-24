@@ -23,3 +23,10 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+ext{
+    buildToolsVersion = '26.0.1'
+    espressoVersion = '2.2.2'
+    supportLibraryVersion = '26.0.1'
+    junitVersion = '4.12'
+}
