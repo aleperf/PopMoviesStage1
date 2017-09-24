@@ -32,7 +32,7 @@ public class JSONUtils {
         Gson gson = new Gson();
         MovieQuery query = gson.fromJson(jsonString, MovieQuery.class);
         Integer statusCode = query.getStatusCode();
-        //The movie db send a status code only in case of error
+        //TheMovieDB sends a status code only in case of error
         //if there is a status code, the query is invalid
         if(statusCode != null){
             return null;
