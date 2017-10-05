@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.preference.PreferenceManager;
@@ -33,8 +34,8 @@ import example.aleperf.com.popmovies.utilities.NetworkUtils;
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Movie>>,
         MovieAdapter.MoviePosterClickListener {
 
-    private final String TAG = MainActivity.class.getSimpleName();
-    private final String EXTRA_TAG = "example.aleperf.com.popmovies.selectedMovie";
+
+    private static final String EXTRA_TAG = "example.aleperf.com.popmovies.selectedMovie";
     private final String CURRENT_PAGE = "current page";
     private final String LAST_PREFERENCE = "last_preference";
     private final String MOVIE_LIST = "movie list";
@@ -65,11 +66,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         setContentView(R.layout.activity_main);
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
 
-        mCurrentSettingsTextView = (TextView) toolbar.findViewById(R.id.current_settings);
+
+        mCurrentSettingsTextView = toolbar.findViewById(R.id.current_settings);
         displaySearchSettingsInToolbar();
 
         if (savedInstanceState != null) {
@@ -85,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             mLastPreference = getCurrentSearchPreference();
         }
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_main);
+        mRecyclerView = findViewById(R.id.recycler_view_main);
         //inflate the numbers of columns from resources, based on the screen width in dp
         int numColumn = getResources().getInteger(R.integer.grid_layout_num_columns);
         GridLayoutManager gridManager = new GridLayoutManager(this, numColumn);
@@ -109,9 +114,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         });
 
-        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar_main);
-        mEmptyView = (LinearLayout) findViewById(R.id.empty_view_home_screen);
-        mPopMovieLogo = (ImageView) findViewById(R.id.empty_view_image);
+        mProgressBar = findViewById(R.id.progress_bar_main);
+        mEmptyView = findViewById(R.id.empty_view_home_screen);
+        mPopMovieLogo = findViewById(R.id.empty_view_image);
         mPopMovieLogo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -303,7 +308,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         boolean mIsLoading;
         int mPageToLoad;
 
-        public MovieLoader(Context context, boolean isLoading, int pageToLoad) {
+        MovieLoader(Context context, boolean isLoading, int pageToLoad) {
             super(context);
             mIsLoading = isLoading;
             mPageToLoad = pageToLoad;
