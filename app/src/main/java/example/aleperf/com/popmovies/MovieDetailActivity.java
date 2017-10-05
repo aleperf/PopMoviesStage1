@@ -1,9 +1,12 @@
 package example.aleperf.com.popmovies;
 
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,8 +21,6 @@ import example.aleperf.com.popmovies.utilities.NetworkUtils;
 public class MovieDetailActivity extends AppCompatActivity {
 
 
-    public static final String MOVIE_DETAIL = "movie detail";
-    
     private final String EXTRA_TAG = "example.aleperf.com.popmovies.selectedMovie";
 
     private String mOriginalTitle;
@@ -29,29 +30,30 @@ public class MovieDetailActivity extends AppCompatActivity {
     private String mPoster;
     private String mSynopsis;
     private boolean mMovieHasImage;
-    private Movie mMovie;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
+        MovieDetailViewModel model = ViewModelProviders.of(this).get(MovieDetailViewModel.class);
         if (savedInstanceState == null) {
             Intent intent = getIntent();
-            mMovie = intent.getParcelableExtra(EXTRA_TAG);
-            extractDataFromMovie(mMovie);
+          Movie  currentMovie = intent.getParcelableExtra(EXTRA_TAG);
+            extractDataFromMovie(currentMovie);
+            model.setCurrentMovie(currentMovie);
         } else {
-           mMovie = savedInstanceState.getParcelable(MOVIE_DETAIL);
-            extractDataFromMovie(mMovie);
+            extractDataFromMovie(model.getCurrentMovie());
            
         }
         
-        TextView headerTextView = (TextView)findViewById(R.id.header_title_detail);
-        TextView dateTextView = (TextView) findViewById(R.id.year_detail);
-        TextView ratingTextView = (TextView)findViewById(R.id.rating_detail);
-        TextView originalTitleTextView = (TextView)findViewById(R.id.original_title);
-        TextView synopsisTextView = (TextView)findViewById(R.id.synopsis_detail);
-        ImageView posterImage = (ImageView)findViewById(R.id.movie_poster_detail);
+        TextView headerTextView = findViewById(R.id.header_title_detail);
+        TextView dateTextView = findViewById(R.id.year_detail);
+        TextView ratingTextView = findViewById(R.id.rating_detail);
+        TextView originalTitleTextView = findViewById(R.id.original_title);
+        TextView synopsisTextView = findViewById(R.id.synopsis_detail);
+        ImageView posterImage = findViewById(R.id.movie_poster_detail);
         
         headerTextView.setText(mTitle);
         originalTitleTextView.setText(mOriginalTitle);
@@ -64,7 +66,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             Picasso.with(this).load(R.drawable.no_preview_pop).fit().into(posterImage);
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -116,9 +118,4 @@ public class MovieDetailActivity extends AppCompatActivity {
         mMovieHasImage = movie.hasImage();
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-       outState.putParcelable(MOVIE_DETAIL,mMovie);
-    }
 }

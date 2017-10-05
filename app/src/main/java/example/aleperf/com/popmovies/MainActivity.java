@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     @Override
-    public  Loader<List<Movie>> onCreateLoader(int i, Bundle bundle) {
+    public Loader<List<Movie>> onCreateLoader(int i, Bundle bundle) {
         return new AsyncTaskLoader<List<Movie>>(this) {
 
             List<Movie> mData;
@@ -330,5 +330,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         outState.putParcelableArrayList(MOVIE_LIST, ((ArrayList<Movie>) mMovies));
 
     }
+
+
 
 }
