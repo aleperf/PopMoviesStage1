@@ -1,5 +1,6 @@
 package example.aleperf.com.popmovies;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.app.LoaderManager;
@@ -129,46 +130,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public Loader<List<Movie>> onCreateLoader(int i, Bundle bundle) {
-        return new AsyncTaskLoader<List<Movie>>(this) {
-
-            List<Movie> mData;
-
-            @Override
-            protected void onStartLoading() {
-
-                if (mMovies != null && !mIsLoading) {
-                    deliverResult(mMovies);
-                } else {
-                    mProgressBar.setVisibility(View.VISIBLE);
-                    forceLoad();
-                }
-            }
-
-            @Override
-            public List<Movie> loadInBackground() {
-
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-                String querySearch = preferences.getString(getString(R.string.pref_search_key), getString(R.string.pref_search_most_pop_value));
-                URL queryURL = NetworkUtils.buildQueryURL(querySearch, mPageToLoad);
-                List<Movie> movies = new ArrayList<>();
-                try {
-                    String jsonResponse = NetworkUtils.getResponseFromHttpsUrl(queryURL);
-                    movies = JSONUtils.getMovieList(jsonResponse);
-                    return movies;
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return movies;
-                }
-
-            }
-
-            @Override
-            public void deliverResult(List<Movie> data) {
-                mData = mMovies;
-                super.deliverResult(data);
-            }
-        };
+        if (mMovies == null || mIsLoading) {
+            mProgressBar.setVisibility(View.VISIBLE);
+        }
+        return new MovieLoader(this, mIsLoading, mPageToLoad);
     }
 
     @Override
@@ -332,5 +297,59 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
 
+    public static class MovieLoader extends AsyncTaskLoader<List<Movie>> {
+
+        List<Movie> mMovies;
+        boolean mIsLoading;
+        int mPageToLoad;
+
+        public MovieLoader(Context context, boolean isLoading, int pageToLoad) {
+            super(context);
+            mIsLoading = isLoading;
+            mPageToLoad = pageToLoad;
+        }
+
+
+        @Override
+        protected void onStartLoading() {
+
+            if (mMovies != null && !mIsLoading) {
+                deliverResult(mMovies);
+            } else {
+
+                forceLoad();
+            }
+        }
+
+        @Override
+        public List<Movie> loadInBackground() {
+
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+            String querySearch = preferences.getString(getContext().getString(R.string.pref_search_key), getContext().getString(R.string.pref_search_most_pop_value));
+            URL queryURL = NetworkUtils.buildQueryURL(querySearch, mPageToLoad);
+            List<Movie> movies = new ArrayList<>();
+            try {
+                String jsonResponse = NetworkUtils.getResponseFromHttpsUrl(queryURL);
+                movies = JSONUtils.getMovieList(jsonResponse);
+                return movies;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return movies;
+            }
+
+        }
+
+        @Override
+        public void deliverResult(List<Movie> data) {
+            mMovies = data;
+            super.deliverResult(data);
+        }
+    }
+
 
 }
+
+
+
+
