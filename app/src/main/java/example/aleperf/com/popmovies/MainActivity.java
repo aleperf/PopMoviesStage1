@@ -2,8 +2,11 @@ package example.aleperf.com.popmovies;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private final String CURRENT_PAGE = "current page";
     private final String LAST_PREFERENCE = "last_preference";
     private final String MOVIE_LIST = "movie list";
+    private final String POSTER_TRANSITION_NAME = "poster transition name";
 
     //max number of pages of Movies loaded from TheMovieDb
     private final int MAX_NUM_PAGES = 3;
@@ -258,11 +262,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
 
     @Override
-    public void onClickMoviePoster(int position) {
+    public void onClickMoviePoster(int position, ImageView sharedImageView) {
         Intent intent = new Intent(this, MovieDetailActivity.class);
         Movie movie = mMovies.get(position);
         intent.putExtra(EXTRA_TAG, movie);
-        startActivity(intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    this,
+                    sharedImageView,
+                    ViewCompat.getTransitionName(sharedImageView));
+            startActivity(intent, options.toBundle());
+        } else {
+            startActivity(intent);
+        }
 
     }
 

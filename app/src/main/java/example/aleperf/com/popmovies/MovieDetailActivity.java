@@ -1,18 +1,19 @@
 package example.aleperf.com.popmovies;
 
-import android.arch.lifecycle.ViewModelProvider;
+
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import example.aleperf.com.popmovies.utilities.MovieUtils;
@@ -21,7 +22,7 @@ import example.aleperf.com.popmovies.utilities.NetworkUtils;
 public class MovieDetailActivity extends AppCompatActivity {
 
 
-    private final String EXTRA_TAG = "example.aleperf.com.popmovies.selectedMovie";
+    private static final String EXTRA_TAG = "example.aleperf.com.popmovies.selectedMovie";
 
     private String mOriginalTitle;
     private String mTitle;
@@ -38,13 +39,15 @@ public class MovieDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
         MovieDetailViewModel model = ViewModelProviders.of(this).get(MovieDetailViewModel.class);
+        Movie currentMovie;
         if (savedInstanceState == null) {
             Intent intent = getIntent();
-          Movie  currentMovie = intent.getParcelableExtra(EXTRA_TAG);
+          currentMovie = intent.getParcelableExtra(EXTRA_TAG);
             extractDataFromMovie(currentMovie);
             model.setCurrentMovie(currentMovie);
         } else {
-            extractDataFromMovie(model.getCurrentMovie());
+            currentMovie = model.getCurrentMovie();
+            extractDataFromMovie(currentMovie);
            
         }
         
@@ -54,16 +57,32 @@ public class MovieDetailActivity extends AppCompatActivity {
         TextView originalTitleTextView = findViewById(R.id.original_title);
         TextView synopsisTextView = findViewById(R.id.synopsis_detail);
         ImageView posterImage = findViewById(R.id.movie_poster_detail);
-        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            String transitionName = currentMovie.getPosterPath();
+            posterImage.setTransitionName(transitionName);
+        }
         headerTextView.setText(mTitle);
         originalTitleTextView.setText(mOriginalTitle);
         dateTextView.setText(MovieUtils.formatDate(mDate));
         ratingTextView.setText(MovieUtils.formatRating(mRating));
         synopsisTextView.setText(mSynopsis);
+        Callback callback = new Callback() {
+            @Override
+            public void onSuccess() {
+                supportStartPostponedEnterTransition();
+            }
+
+            @Override
+            public void onError() {
+                supportStartPostponedEnterTransition();
+            }
+        };
         if(mMovieHasImage){
-            Picasso.with(this).load(NetworkUtils.buildImageUri(mPoster)).fit().into(posterImage);
+            Picasso.with(this).load(NetworkUtils.buildImageUri(mPoster)).fit().noFade().
+                    into(posterImage,callback);
+
         } else {
-            Picasso.with(this).load(R.drawable.no_preview_pop).fit().into(posterImage);
+            Picasso.with(this).load(R.drawable.no_preview_pop).fit().noFade().into(posterImage, callback);
         }
 
         Toolbar toolbar = findViewById(R.id.toolbar);

@@ -2,6 +2,7 @@ package example.aleperf.com.popmovies;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +27,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
      */
     public interface MoviePosterClickListener {
 
-        void onClickMoviePoster(int position);
+        void onClickMoviePoster(int position, ImageView sharedImageView);
     }
 
 
@@ -47,8 +48,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
 
     @Override
     public void onBindViewHolder(MovieHolder holder, int position) {
-        holder.bindMovie(position);
-
+        Movie movie = mMovies.get(position);
+        holder.bindMovie(movie);
+        ViewCompat.setTransitionName(holder.poster,movie.getPosterPath());
     }
 
     @Override
@@ -77,10 +79,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
             poster.setOnClickListener(this);
         }
 
-        public void bindMovie(int position) {
-            Movie movie = mMovies.get(position);
+        public void bindMovie(Movie movie) {
+
             if (movie.hasImage()) {
-                String path = mMovies.get(position).getPosterPath();
+                String path = movie.getPosterPath();
                 Uri imagePath = NetworkUtils.buildImageUri(path);
                 Picasso.with(mContext).load(imagePath).fit().error(R.drawable.no_preview_pop).into(poster);
                 movieTitle.setVisibility(View.INVISIBLE);
@@ -97,7 +99,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
         public void onClick(View view) {
             if (mContext instanceof MoviePosterClickListener) {
                 MoviePosterClickListener listener = (MoviePosterClickListener) mContext;
-                listener.onClickMoviePoster(getAdapterPosition());
+                listener.onClickMoviePoster(getAdapterPosition(), poster);
             }
         }
     }

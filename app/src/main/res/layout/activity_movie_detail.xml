@@ -58,6 +58,7 @@
 
                 <ImageView
                     android:id="@+id/movie_poster_detail"
+                    android:transitionName="poster"
                     android:layout_width="@dimen/movie_poster_width"
                     android:layout_height="@dimen/movie_poster_height"
                     android:contentDescription="@string/cd_movie_poster"
