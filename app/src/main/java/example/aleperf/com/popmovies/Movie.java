@@ -10,6 +10,8 @@ import com.google.gson.annotations.SerializedName;
 
 public class Movie implements Parcelable {
 
+    private final static String NO_POSTER = "no poster";
+
     @SuppressWarnings("unused")
     public static final Parcelable.Creator CREATOR
             = new Parcelable.Creator() {
@@ -37,17 +39,19 @@ public class Movie implements Parcelable {
     private String mPosterPath;
 
     //Constructor
+
     /**
-    public Movie(String movieId, String originalTitle, String title, String path,
-                 String plot, String date, double rating) {
-        mMovieId = movieId;
-        mOriginalTitle = originalTitle;
-        mTitle = title;
-        mPosterPath = path;
-        mPlotSynopsis = plot;
-        mReleaseDate = date;
-        this.mRating = rating;
-    }**/
+     * public Movie(String movieId, String originalTitle, String title, String path,
+     * String plot, String date, double rating) {
+     * mMovieId = movieId;
+     * mOriginalTitle = originalTitle;
+     * mTitle = title;
+     * mPosterPath = path;
+     * mPlotSynopsis = plot;
+     * mReleaseDate = date;
+     * this.mRating = rating;
+     * }
+     **/
 
     //Constructor used by Parcelable to deserialize data
     private Movie(Parcel in) {
@@ -77,7 +81,10 @@ public class Movie implements Parcelable {
     }
 
     String getPosterPath() {
-        return mPosterPath.replace("/", "");
+        if (mPosterPath != null) {
+            return mPosterPath.replace("/", "");
+        }
+        return NO_POSTER;
     }
 
     String getReleaseDate() {
@@ -90,7 +97,7 @@ public class Movie implements Parcelable {
 
     boolean hasImage() {
 
-        return (getPosterPath() != null);
+        return !(getPosterPath().equals(NO_POSTER));
     }
 
     @Override

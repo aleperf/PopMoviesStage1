@@ -7,6 +7,7 @@ import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -83,10 +84,12 @@ public class MovieDetailActivity extends AppCompatActivity {
             }
         };
         if (mMovieHasImage) {
+            Log.d("uffa", "sono in has image, nome film: " + mTitle);
             Picasso.with(this).load(NetworkUtils.buildImageUri(mPoster)).fit().noFade().
                     into(posterImage, callback);
 
         } else {
+            Log.d("uffa", "sono in else, nome film: " + mTitle);
             Picasso.with(this).load(R.drawable.no_preview_pop).fit().noFade().into(posterImage, callback);
         }
 
