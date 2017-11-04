@@ -33,7 +33,6 @@ public class MovieDetailActivity extends AppCompatActivity {
     private boolean mMovieHasImage;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,15 +41,15 @@ public class MovieDetailActivity extends AppCompatActivity {
         Movie currentMovie;
         if (savedInstanceState == null) {
             Intent intent = getIntent();
-          currentMovie = intent.getParcelableExtra(EXTRA_TAG);
+            currentMovie = intent.getParcelableExtra(EXTRA_TAG);
             extractDataFromMovie(currentMovie);
             model.setCurrentMovie(currentMovie);
         } else {
             currentMovie = model.getCurrentMovie();
             extractDataFromMovie(currentMovie);
-           
+
         }
-        
+
         TextView headerTextView = findViewById(R.id.header_title_detail);
         TextView dateTextView = findViewById(R.id.year_detail);
         TextView ratingTextView = findViewById(R.id.rating_detail);
@@ -58,8 +57,14 @@ public class MovieDetailActivity extends AppCompatActivity {
         TextView synopsisTextView = findViewById(R.id.synopsis_detail);
         ImageView posterImage = findViewById(R.id.movie_poster_detail);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            String transitionName = currentMovie.getPosterPath();
-            posterImage.setTransitionName(transitionName);
+
+            try {
+                String transitionName = currentMovie.getmMovieId();
+                posterImage.setTransitionName(transitionName);
+
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
         }
         headerTextView.setText(mTitle);
         originalTitleTextView.setText(mOriginalTitle);
@@ -77,9 +82,9 @@ public class MovieDetailActivity extends AppCompatActivity {
                 supportStartPostponedEnterTransition();
             }
         };
-        if(mMovieHasImage){
+        if (mMovieHasImage) {
             Picasso.with(this).load(NetworkUtils.buildImageUri(mPoster)).fit().noFade().
-                    into(posterImage,callback);
+                    into(posterImage, callback);
 
         } else {
             Picasso.with(this).load(R.drawable.no_preview_pop).fit().noFade().into(posterImage, callback);
@@ -87,9 +92,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
 
 
     }
@@ -102,11 +105,10 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch(id){
+        switch (id) {
             case android.R.id.home:
                 onBackPressed();
                 return true;
@@ -124,10 +126,11 @@ public class MovieDetailActivity extends AppCompatActivity {
     /**
      * Extract data from the Movie passed from the caller activity
      * and load them into the UI
+     *
      * @param movie the Movie passed from the caller activity to the MovieDetailActivity
      */
-    
-    private void extractDataFromMovie(Movie movie){
+
+    private void extractDataFromMovie(Movie movie) {
         mOriginalTitle = movie.getOriginalTitle();
         mTitle = movie.getTitle();
         mDate = movie.getReleaseDate();

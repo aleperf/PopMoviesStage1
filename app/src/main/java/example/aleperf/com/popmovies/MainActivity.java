@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private final String CURRENT_PAGE = "current page";
     private final String LAST_PREFERENCE = "last_preference";
     private final String MOVIE_LIST = "movie list";
-    private final String POSTER_TRANSITION_NAME = "poster transition name";
+
 
     //max number of pages of Movies loaded from TheMovieDb
     private final int MAX_NUM_PAGES = 3;
@@ -266,11 +266,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         Intent intent = new Intent(this, MovieDetailActivity.class);
         Movie movie = mMovies.get(position);
         intent.putExtra(EXTRA_TAG, movie);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            String transitionName = ViewCompat.getTransitionName(sharedImageView);
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                     this,
                     sharedImageView,
-                    ViewCompat.getTransitionName(sharedImageView));
+                    transitionName);
             startActivity(intent, options.toBundle());
         } else {
             startActivity(intent);

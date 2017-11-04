@@ -22,6 +22,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
     private Context mContext;
     private List<Movie> mMovies;
 
+
     /**
      * Interface used to manage the click on a Movie Poster
      */
@@ -31,7 +32,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
     }
 
 
-    public MovieAdapter(Context context) {
+    MovieAdapter(Context context) {
         this.mContext = context;
 
     }
@@ -50,7 +51,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
     public void onBindViewHolder(MovieHolder holder, int position) {
         Movie movie = mMovies.get(position);
         holder.bindMovie(movie);
-        ViewCompat.setTransitionName(holder.poster,movie.getPosterPath());
+        ViewCompat.setTransitionName(holder.poster, movie.getmMovieId());
+
     }
 
     @Override
@@ -61,7 +63,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
         return mMovies.size();
     }
 
-    public void setMovieData(List<Movie> data) {
+    void setMovieData(List<Movie> data) {
         mMovies = data;
         notifyDataSetChanged();
     }
@@ -72,14 +74,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
         private ImageView poster;
         private TextView movieTitle;
 
-        public MovieHolder(View view) {
+        MovieHolder(View view) {
             super(view);
-            poster = (ImageView) view.findViewById(R.id.movie_poster);
-            movieTitle = (TextView) view.findViewById(R.id.title_no_image_preview);
+            poster = view.findViewById(R.id.movie_poster);
+            movieTitle = view.findViewById(R.id.title_no_image_preview);
             poster.setOnClickListener(this);
         }
 
-        public void bindMovie(Movie movie) {
+        void bindMovie(Movie movie) {
 
             if (movie.hasImage()) {
                 String path = movie.getPosterPath();
@@ -102,5 +104,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
                 listener.onClickMoviePoster(getAdapterPosition(), poster);
             }
         }
+
+
     }
+
+
 }

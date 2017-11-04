@@ -18,4 +18,6 @@ public class MovieDetailViewModel extends ViewModel {
         currentMovie = movie;
     }
 
+
+
 }
