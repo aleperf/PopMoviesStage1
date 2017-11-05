@@ -10,7 +10,8 @@ import com.google.gson.annotations.SerializedName;
 
 public class Movie implements Parcelable {
 
-    private final static String NO_POSTER = "no poster";
+    private final static String NO_IMAGE = "no image";
+
 
     @SuppressWarnings("unused")
     public static final Parcelable.Creator CREATOR
@@ -37,6 +38,8 @@ public class Movie implements Parcelable {
     final private String mReleaseDate;
     @SerializedName("poster_path")
     private String mPosterPath;
+    @SerializedName("backdrop_path")
+    private String mBackdropPath;
 
     //Constructor
 
@@ -84,7 +87,14 @@ public class Movie implements Parcelable {
         if (mPosterPath != null) {
             return mPosterPath.replace("/", "");
         }
-        return NO_POSTER;
+        return NO_IMAGE;
+    }
+
+    String getBackdropPath(){
+        if(mBackdropPath != null){
+            return mBackdropPath.replace("/", "");
+        }
+        return NO_IMAGE;
     }
 
     String getReleaseDate() {
@@ -97,7 +107,11 @@ public class Movie implements Parcelable {
 
     boolean hasImage() {
 
-        return !(getPosterPath().equals(NO_POSTER));
+        return !(getPosterPath().equals(NO_IMAGE));
+    }
+
+    boolean hasBackdropPath(){
+        return !(getBackdropPath().equals(NO_IMAGE));
     }
 
     @Override
