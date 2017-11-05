@@ -60,7 +60,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
             try {
-                String transitionName = currentMovie.getmMovieId();
+                String transitionName = currentMovie.getMovieId();
                 posterImage.setTransitionName(transitionName);
 
             } catch (NullPointerException e) {
@@ -89,7 +89,6 @@ public class MovieDetailActivity extends AppCompatActivity {
                     into(posterImage, callback);
 
         } else {
-            Log.d("uffa", "sono in else, nome film: " + mTitle);
             Picasso.with(this).load(R.drawable.no_preview_pop).fit().noFade().into(posterImage, callback);
         }
 

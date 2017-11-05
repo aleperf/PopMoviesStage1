@@ -51,7 +51,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
     public void onBindViewHolder(MovieHolder holder, int position) {
         Movie movie = mMovies.get(position);
         holder.bindMovie(movie);
-        ViewCompat.setTransitionName(holder.poster, movie.getmMovieId());
+        ViewCompat.setTransitionName(holder.poster, movie.getMovieId());
 
     }
 

@@ -40,6 +40,8 @@ public class Movie implements Parcelable {
     private String mPosterPath;
     @SerializedName("backdrop_path")
     private String mBackdropPath;
+    @SerializedName("genre_ids")
+    private int[] mGenreIds;
 
     //Constructor
 
@@ -61,13 +63,15 @@ public class Movie implements Parcelable {
         mMovieId = in.readString();
         mOriginalTitle = in.readString();
         mTitle = in.readString();
-        mPosterPath = in.readString();
         mPlotSynopsis = in.readString();
         mRating = in.readDouble();
         mReleaseDate = in.readString();
+        mPosterPath = in.readString();
+        mBackdropPath = in.readString();
+        mGenreIds = in.createIntArray();
     }
 
-    String getmMovieId() {
+    String getMovieId() {
         return mMovieId;
     }
 
@@ -114,6 +118,10 @@ public class Movie implements Parcelable {
         return !(getBackdropPath().equals(NO_IMAGE));
     }
 
+    int[] getGenredIds(){
+        return mGenreIds;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -125,10 +133,12 @@ public class Movie implements Parcelable {
         parcel.writeString(mMovieId);
         parcel.writeString(mOriginalTitle);
         parcel.writeString(mTitle);
-        parcel.writeString(mPosterPath);
         parcel.writeString(mPlotSynopsis);
         parcel.writeDouble(mRating);
         parcel.writeString(mReleaseDate);
+        parcel.writeString(mPosterPath);
+        parcel.writeString(mBackdropPath);
+        parcel.writeIntArray(mGenreIds);
 
     }
 }
