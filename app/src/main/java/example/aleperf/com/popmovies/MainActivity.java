@@ -1,8 +1,11 @@
 package example.aleperf.com.popmovies;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -14,6 +17,7 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Movie>>,
+public class MainActivity extends AppCompatActivity implements
         MovieAdapter.MoviePosterClickListener {
 
 
@@ -36,11 +40,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private final String CURRENT_PAGE = "current page";
     private final String LAST_PREFERENCE = "last_preference";
     private final String MOVIE_LIST = "movie list";
-
-
-    //max number of pages of Movies loaded from TheMovieDb
-    private final int MAX_NUM_PAGES = 3;
-    private static final int MOVIE_LOADER_ID = 0;
 
 
     private ProgressBar mProgressBar;
@@ -56,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private boolean mIsLoading = false;
     //the last preference seen when this activity is visible
     private String mLastPreference;
+
+    private MainActivityViewModel viewModel;
 
 
     @Override
@@ -74,26 +75,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         mCurrentSettingsTextView = toolbar.findViewById(R.id.current_settings);
         displaySearchSettingsInToolbar();
-
-        if (savedInstanceState != null) {
-            mPageToLoad = savedInstanceState.getInt(CURRENT_PAGE, 1);
-            mLastPreference = savedInstanceState.getString(LAST_PREFERENCE);
-            if (!haveSearchPreferencesChanged()) {
-                mMovies = savedInstanceState.getParcelableArrayList(MOVIE_LIST);
-            } else {
-                mMovies = null;
-            }
-
-        } else {
-            mLastPreference = getCurrentSearchPreference();
-        }
-
+        viewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
+        subscribe();
+        mMovies = viewModel.getMovies().getValue();
         mRecyclerView = findViewById(R.id.recycler_view_main);
         //inflate the numbers of columns from resources, based on the screen width in dp
         int numColumn = getResources().getInteger(R.integer.grid_layout_num_columns);
         GridLayoutManager gridManager = new GridLayoutManager(this, numColumn);
         mRecyclerView.setLayoutManager(gridManager);
         mAdapter = new MovieAdapter(this);
+        mAdapter.setMovieData(mMovies);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setHasFixedSize(true);
         //set a listener on the recyclerView scroll to load more data if needed
@@ -101,78 +92,31 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if (!mRecyclerView.canScrollVertically(1) && !mIsLoading && mPageToLoad <= MAX_NUM_PAGES) {
+                if (!mRecyclerView.canScrollVertically(1)) {// && mPageToLoad <= MAX_NUM_PAGES) {
                     //if mRecyclerView can't scroll down and the app isn't already loading something
                     //load another page
                     mIsLoading = true;
-                    getSupportLoaderManager().restartLoader(MOVIE_LOADER_ID, null, MainActivity.this);
-
+                    viewModel.loadMovies();
 
                 }
             }
         });
 
-        mProgressBar = findViewById(R.id.progress_bar_main);
-        mEmptyView = findViewById(R.id.empty_view_home_screen);
-        mPopMovieLogo = findViewById(R.id.empty_view_image);
-        mPopMovieLogo.setOnClickListener(new View.OnClickListener() {
+    }
+
+
+
+    private void subscribe() {
+        final Observer<List<Movie>> movieObserver = new Observer<List<Movie>>() {
             @Override
-            public void onClick(View view) {
-                Toast.makeText(MainActivity.this, getString(R.string.toast_msg_empty_view), Toast.LENGTH_SHORT).show();
-                resetInitialState();
-                mIsLoading = true;
-                getSupportLoaderManager().restartLoader(MOVIE_LOADER_ID, null, MainActivity.this);
-            }
-        });
-
-
-        getSupportLoaderManager().initLoader(MOVIE_LOADER_ID, null, MainActivity.this);
-
-
-    }
-
-    @Override
-    public Loader<List<Movie>> onCreateLoader(int i, Bundle bundle) {
-        if (mMovies == null || mIsLoading) {
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
-        return new MovieLoader(this, mIsLoading, mPageToLoad);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> movies) {
-        mProgressBar.setVisibility(View.INVISIBLE);
-
-        if (movies != null && movies.size() > 0) { //if there are new data, load them in mMovies
-
-            if (mMovies == null) {
-                mMovies = movies;
-                mPageToLoad++;
-                if (mIsLoading) {
-                    mIsLoading = false;
+            public void onChanged(@Nullable final List<Movie> listOfMovies) {
+                if (listOfMovies != null) {
+                    mAdapter.setMovieData(listOfMovies);
                 }
-
-            } else if (mIsLoading) {
-                mMovies.addAll(movies);
-                mIsLoading = false;
-                mPageToLoad++;
-
             }
-        }
+        };
 
-        if (mMovies != null) { //if mMovies is not null, load data in the adapter.
-            mAdapter.setMovieData(mMovies);
-            mAdapter.notifyDataSetChanged();
-            hideEmptyMessage();
-        } else {//no data to display, show the empty message
-            showEmptyMessage();
-        }
-
-    }
-
-    @Override
-    public void onLoaderReset(Loader<List<Movie>> loader) {
-        //do nothing;
+        viewModel.getMovies().observe(this, movieObserver);
     }
 
 
@@ -187,15 +131,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
-    /**
-     * Check if the last preference seen by this activity is the current preference chosen by the user.
-     *
-     * @return true if the preference is changed, false otherwise.
-     */
-
-    private boolean haveSearchPreferencesChanged() {
-        return !mLastPreference.equals(getCurrentSearchPreference());
-    }
 
     /**
      * Show the current setting for the movie search in the Toolbar of MainActivity,
@@ -210,32 +145,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
-    /**
-     * Reset the fields necessary to start a search to the default values
-     * and set the mLastPreference field to the value set in preferences
-     */
-
-    private void resetInitialState() {
-        mLastPreference = getCurrentSearchPreference();
-        mIsLoading = true;
-        mPageToLoad = 1;
-        mMovies = null;
-    }
 
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        if (mEmptyView.getVisibility() == View.VISIBLE) {
-            mProgressBar.setVisibility(View.INVISIBLE);
-        }
-        //if the preferences have been changed, reset the initial state e start a new search
-        if (haveSearchPreferencesChanged()) {
-            resetInitialState();
-            getSupportLoaderManager().restartLoader(MOVIE_LOADER_ID, null, this);
-
-        }
+        viewModel.checkPreferencesChanged();
         displaySearchSettingsInToolbar();
     }
 
@@ -283,7 +198,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     /**
      * Show the Empty Message - used when the RecyclerView is Empty
      */
-
     private void showEmptyMessage() {
         mEmptyView.setVisibility(View.VISIBLE);
         mPopMovieLogo.requestFocus();

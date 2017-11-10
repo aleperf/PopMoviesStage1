@@ -43,20 +43,6 @@ public class Movie implements Parcelable {
     @SerializedName("genre_ids")
     private int[] mGenreIds;
 
-    //Constructor
-
-    /**
-     * public Movie(String movieId, String originalTitle, String title, String path,
-     * String plot, String date, double rating) {
-     * mMovieId = movieId;
-     * mOriginalTitle = originalTitle;
-     * mTitle = title;
-     * mPosterPath = path;
-     * mPlotSynopsis = plot;
-     * mReleaseDate = date;
-     * this.mRating = rating;
-     * }
-     **/
 
     //Constructor used by Parcelable to deserialize data
     private Movie(Parcel in) {
@@ -94,7 +80,7 @@ public class Movie implements Parcelable {
         return NO_IMAGE;
     }
 
-    String getBackdropPath(){
+    private String getBackdropPath(){
         if(mBackdropPath != null){
             return mBackdropPath.replace("/", "");
         }
