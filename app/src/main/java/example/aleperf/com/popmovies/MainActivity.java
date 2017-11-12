@@ -22,34 +22,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import java.util.ArrayList;
+import android.widget.Toast;
+
 import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements
         MovieAdapter.MoviePosterClickListener {
 
-
     private static final String EXTRA_TAG = "example.aleperf.com.popmovies.selectedMovie";
-    private final String CURRENT_PAGE = "current page";
-    private final String LAST_PREFERENCE = "last_preference";
-    private final String MOVIE_LIST = "movie list";
 
-
-    private ProgressBar mProgressBar;
     private ImageView mPopMovieLogo;
     private LinearLayout mEmptyView;
     private RecyclerView mRecyclerView;
     private MovieAdapter mAdapter;
     private TextView mCurrentSettingsTextView;
-    //next page to load in background
-    private int mPageToLoad = 1;
-    //true if there is a current loading in background
-    private boolean mIsLoading = false;
-    //the last preference seen when this activity is visible
-    private String mLastPreference;
 
     private MainActivityViewModel viewModel;
 
@@ -66,8 +54,8 @@ public class MainActivity extends AppCompatActivity implements
         if (actionBar != null) {
             actionBar.setDisplayShowHomeEnabled(true);
         }
-
-
+        mEmptyView = findViewById(R.id.empty_view_home_screen);
+        mPopMovieLogo = findViewById(R.id.empty_view_image);
         mCurrentSettingsTextView = toolbar.findViewById(R.id.current_settings);
         displaySearchSettingsInToolbar();
         viewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
@@ -87,19 +75,26 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if (!mRecyclerView.canScrollVertically(1)) {// && mPageToLoad <= MAX_NUM_PAGES) {
+                if (!mRecyclerView.canScrollVertically(1)) {
                     //if mRecyclerView can't scroll down and the app isn't already loading something
                     //load another page
-                    mIsLoading = true;
                     viewModel.loadMovies();
-
                 }
             }
         });
-
+        mEmptyView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, getString(R.string.toast_msg_empty_view), Toast.LENGTH_SHORT).show();
+                viewModel.loadMovies();
+            }
+        });
+        if (mMovies == null || mMovies.size() == 0) {
+            showEmptyMessage();
+        } else {
+            hideEmptyMessage();
+        }
     }
-
-
 
     private void subscribe() {
         final Observer<List<Movie>> movieObserver = new Observer<List<Movie>>() {
@@ -107,7 +102,16 @@ public class MainActivity extends AppCompatActivity implements
             public void onChanged(@Nullable final List<Movie> listOfMovies) {
                 if (listOfMovies != null) {
                     mAdapter.setMovieData(listOfMovies);
+                    if (listOfMovies.size() == 0) {
+                        showEmptyMessage();
+                    } else {
+                        hideEmptyMessage();
+                    }
+                } else {
+                    showEmptyMessage();
                 }
+
+
             }
         };
 
@@ -141,12 +145,17 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-
     @Override
     protected void onResume() {
         super.onResume();
         viewModel.checkPreferencesChanged();
         displaySearchSettingsInToolbar();
+        List<Movie> movies = viewModel.getMovies().getValue();
+        if (movies == null || movies.size() == 0) {
+            showEmptyMessage();
+        } else {
+            hideEmptyMessage();
+        }
     }
 
 
@@ -196,7 +205,6 @@ public class MainActivity extends AppCompatActivity implements
     private void showEmptyMessage() {
         mEmptyView.setVisibility(View.VISIBLE);
         mPopMovieLogo.requestFocus();
-        mProgressBar.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -208,13 +216,6 @@ public class MainActivity extends AppCompatActivity implements
         mPopMovieLogo.clearFocus();
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt(CURRENT_PAGE, mPageToLoad);
-        mLastPreference = getCurrentSearchPreference();
-        outState.putString(LAST_PREFERENCE, mLastPreference);
-    }
 
 }
 
