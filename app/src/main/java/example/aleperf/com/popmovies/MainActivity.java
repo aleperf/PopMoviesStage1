@@ -1,6 +1,7 @@
 package example.aleperf.com.popmovies;
 
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -45,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements
     private TextView mCurrentSettingsTextView;
     //next page to load in background
     private int mPageToLoad = 1;
-    private List<Movie> mMovies;
     //true if there is a current loading in background
     private boolean mIsLoading = false;
     //the last preference seen when this activity is visible
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements
         displaySearchSettingsInToolbar();
         viewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
         subscribe();
-        mMovies = viewModel.getMovies().getValue();
+        List<Movie> mMovies = viewModel.getMovies().getValue();
         mRecyclerView = findViewById(R.id.recycler_view_main);
         //inflate the numbers of columns from resources, based on the screen width in dp
         int numColumn = getResources().getInteger(R.integer.grid_layout_num_columns);
@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onClickMoviePoster(int position, ImageView sharedImageView) {
         Intent intent = new Intent(this, MovieDetailActivity.class);
-        Movie movie = mMovies.get(position);
+        Movie movie = viewModel.getMovies().getValue().get(position);
         intent.putExtra(EXTRA_TAG, movie);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -214,8 +214,6 @@ public class MainActivity extends AppCompatActivity implements
         outState.putInt(CURRENT_PAGE, mPageToLoad);
         mLastPreference = getCurrentSearchPreference();
         outState.putString(LAST_PREFERENCE, mLastPreference);
-        outState.putParcelableArrayList(MOVIE_LIST, ((ArrayList<Movie>) mMovies));
-
     }
 
 }

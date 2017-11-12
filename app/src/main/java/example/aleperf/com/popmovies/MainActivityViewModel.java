@@ -8,8 +8,6 @@ import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.preference.PreferenceManager;
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 
