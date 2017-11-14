@@ -25,74 +25,74 @@ public class Movie implements Parcelable {
         }
     };
     @SerializedName("id")
-    final private String mMovieId;
+    final private String movieId;
     @SerializedName("original_title")
-    final private String mOriginalTitle;
+    final private String originalTitle;
     @SerializedName("title")
-    final private String mTitle;
+    final private String title;
     @SerializedName("overview")
-    final private String mPlotSynopsis;
+    final private String plotSynopsis;
     @SerializedName("vote_average")
-    final private double mRating;
+    final private double rating;
     @SerializedName("release_date")
-    final private String mReleaseDate;
+    final private String releaseDate;
     @SerializedName("poster_path")
-    private String mPosterPath;
+    private String posterPath;
     @SerializedName("backdrop_path")
-    private String mBackdropPath;
+    private String backdropPath;
     @SerializedName("genre_ids")
-    private int[] mGenreIds;
+    private int[] genreIds;
 
 
     //Constructor used by Parcelable to deserialize data
     private Movie(Parcel in) {
-        mMovieId = in.readString();
-        mOriginalTitle = in.readString();
-        mTitle = in.readString();
-        mPlotSynopsis = in.readString();
-        mRating = in.readDouble();
-        mReleaseDate = in.readString();
-        mPosterPath = in.readString();
-        mBackdropPath = in.readString();
-        mGenreIds = in.createIntArray();
+        movieId = in.readString();
+        originalTitle = in.readString();
+        title = in.readString();
+        plotSynopsis = in.readString();
+        rating = in.readDouble();
+        releaseDate = in.readString();
+        posterPath = in.readString();
+        backdropPath = in.readString();
+        genreIds = in.createIntArray();
     }
 
     String getMovieId() {
-        return mMovieId;
+        return movieId;
     }
 
     String getOriginalTitle() {
-        return mOriginalTitle;
+        return originalTitle;
     }
 
     String getTitle() {
-        return mTitle;
+        return title;
     }
 
     String getPlotSynopsis() {
-        return mPlotSynopsis;
+        return plotSynopsis;
     }
 
     String getPosterPath() {
-        if (mPosterPath != null) {
-            return mPosterPath.replace("/", "");
+        if (posterPath != null) {
+            return posterPath.replace("/", "");
         }
         return NO_IMAGE;
     }
 
     private String getBackdropPath(){
-        if(mBackdropPath != null){
-            return mBackdropPath.replace("/", "");
+        if(backdropPath != null){
+            return backdropPath.replace("/", "");
         }
         return NO_IMAGE;
     }
 
     String getReleaseDate() {
-        return mReleaseDate;
+        return releaseDate;
     }
 
     double getRating() {
-        return mRating;
+        return rating;
     }
 
     boolean hasImage() {
@@ -105,7 +105,7 @@ public class Movie implements Parcelable {
     }
 
     int[] getGenredIds(){
-        return mGenreIds;
+        return genreIds;
     }
 
     @Override
@@ -116,15 +116,15 @@ public class Movie implements Parcelable {
     //serialize parcelable data
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(mMovieId);
-        parcel.writeString(mOriginalTitle);
-        parcel.writeString(mTitle);
-        parcel.writeString(mPlotSynopsis);
-        parcel.writeDouble(mRating);
-        parcel.writeString(mReleaseDate);
-        parcel.writeString(mPosterPath);
-        parcel.writeString(mBackdropPath);
-        parcel.writeIntArray(mGenreIds);
+        parcel.writeString(movieId);
+        parcel.writeString(originalTitle);
+        parcel.writeString(title);
+        parcel.writeString(plotSynopsis);
+        parcel.writeDouble(rating);
+        parcel.writeString(releaseDate);
+        parcel.writeString(posterPath);
+        parcel.writeString(backdropPath);
+        parcel.writeIntArray(genreIds);
 
     }
 }

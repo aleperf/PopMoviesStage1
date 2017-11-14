@@ -24,13 +24,13 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     private static final String EXTRA_TAG = "example.aleperf.com.popmovies.selectedMovie";
 
-    private String mOriginalTitle;
-    private String mTitle;
-    private String mDate;
-    private double mRating;
-    private String mPoster;
-    private String mSynopsis;
-    private boolean mMovieHasImage;
+    private String originalTitle;
+    private String title;
+    private String date;
+    private double rating;
+    private String poster;
+    private String synopsis;
+    private boolean movieHasImage;
 
 
     @Override
@@ -63,11 +63,11 @@ public class MovieDetailActivity extends AppCompatActivity {
             }
 
         }
-        headerTextView.setText(mTitle);
-        originalTitleTextView.setText(mOriginalTitle);
-        dateTextView.setText(MovieUtils.formatDate(mDate));
-        ratingTextView.setText(MovieUtils.formatRating(mRating));
-        synopsisTextView.setText(mSynopsis);
+        headerTextView.setText(title);
+        originalTitleTextView.setText(originalTitle);
+        dateTextView.setText(MovieUtils.formatDate(date));
+        ratingTextView.setText(MovieUtils.formatRating(rating));
+        synopsisTextView.setText(synopsis);
         Callback callback = new Callback() {
             @Override
             public void onSuccess() {
@@ -79,8 +79,8 @@ public class MovieDetailActivity extends AppCompatActivity {
                 supportStartPostponedEnterTransition();
             }
         };
-        if (mMovieHasImage) {
-            Picasso.with(this).load(NetworkUtils.buildImageUri(mPoster)).fit().noFade().
+        if (movieHasImage) {
+            Picasso.with(this).load(NetworkUtils.buildImageUri(poster)).fit().noFade().
                     into(posterImage, callback);
 
         } else {
@@ -130,13 +130,13 @@ public class MovieDetailActivity extends AppCompatActivity {
      */
 
     private void extractDataFromMovie(Movie movie) {
-        mOriginalTitle = movie.getOriginalTitle();
-        mTitle = movie.getTitle();
-        mDate = movie.getReleaseDate();
-        mRating = movie.getRating();
-        mPoster = movie.getPosterPath();
-        mSynopsis = movie.getPlotSynopsis();
-        mMovieHasImage = movie.hasImage();
+        originalTitle = movie.getOriginalTitle();
+        title = movie.getTitle();
+        date = movie.getReleaseDate();
+        rating = movie.getRating();
+        poster = movie.getPosterPath();
+        synopsis = movie.getPlotSynopsis();
+        movieHasImage = movie.hasImage();
     }
 
 }

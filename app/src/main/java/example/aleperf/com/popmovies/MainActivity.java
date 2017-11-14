@@ -1,7 +1,6 @@
 package example.aleperf.com.popmovies;
 
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,11 +32,11 @@ public class MainActivity extends AppCompatActivity implements
 
     private static final String EXTRA_TAG = "example.aleperf.com.popmovies.selectedMovie";
 
-    private ImageView mPopMovieLogo;
-    private LinearLayout mEmptyView;
-    private RecyclerView mRecyclerView;
-    private MovieAdapter mAdapter;
-    private TextView mCurrentSettingsTextView;
+    private ImageView popMovieLogo;
+    private LinearLayout emptyView;
+    private RecyclerView movieRecyclerView;
+    private MovieAdapter adapter;
+    private TextView currentSettingsTextView;
 
     private MainActivityViewModel viewModel;
 
@@ -54,35 +53,35 @@ public class MainActivity extends AppCompatActivity implements
         if (actionBar != null) {
             actionBar.setDisplayShowHomeEnabled(true);
         }
-        mEmptyView = findViewById(R.id.empty_view_home_screen);
-        mPopMovieLogo = findViewById(R.id.empty_view_image);
-        mCurrentSettingsTextView = toolbar.findViewById(R.id.current_settings);
+        emptyView = findViewById(R.id.empty_view_home_screen);
+        popMovieLogo = findViewById(R.id.empty_view_image);
+        currentSettingsTextView = toolbar.findViewById(R.id.current_settings);
         displaySearchSettingsInToolbar();
         viewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
         subscribe();
         List<Movie> mMovies = viewModel.getMovies().getValue();
-        mRecyclerView = findViewById(R.id.recycler_view_main);
+        movieRecyclerView = findViewById(R.id.recycler_view_main);
         //inflate the numbers of columns from resources, based on the screen width in dp
         int numColumn = getResources().getInteger(R.integer.grid_layout_num_columns);
         GridLayoutManager gridManager = new GridLayoutManager(this, numColumn);
-        mRecyclerView.setLayoutManager(gridManager);
-        mAdapter = new MovieAdapter(this);
-        mAdapter.setMovieData(mMovies);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setHasFixedSize(true);
-        //set a listener on the recyclerView scroll to load more data if needed
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        movieRecyclerView.setLayoutManager(gridManager);
+        adapter = new MovieAdapter(this);
+        adapter.setMovieData(mMovies);
+        movieRecyclerView.setAdapter(adapter);
+        movieRecyclerView.setHasFixedSize(true);
+        //set a listener on the movieRecyclerView scroll to load more data if needed
+        movieRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if (!mRecyclerView.canScrollVertically(1)) {
-                    //if mRecyclerView can't scroll down and the app isn't already loading something
+                if (!MainActivity.this.movieRecyclerView.canScrollVertically(1)) {
+                    //if movieRecyclerView can't scroll down and the app isn't already loading something
                     //load another page
                     viewModel.loadMovies();
                 }
             }
         });
-        mEmptyView.setOnClickListener(new View.OnClickListener() {
+        emptyView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this, getString(R.string.toast_msg_empty_view), Toast.LENGTH_SHORT).show();
@@ -101,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onChanged(@Nullable final List<Movie> listOfMovies) {
                 if (listOfMovies != null) {
-                    mAdapter.setMovieData(listOfMovies);
+                    adapter.setMovieData(listOfMovies);
                     if (listOfMovies.size() == 0) {
                         showEmptyMessage();
                     } else {
@@ -138,9 +137,9 @@ public class MainActivity extends AppCompatActivity implements
         String preference = getCurrentSearchPreference();
         String topRated = getString(R.string.pref_search_top_rated_value);
         if (preference.equals(topRated)) {
-            mCurrentSettingsTextView.setText(getString(R.string.pref_search_top_rated_label));
+            currentSettingsTextView.setText(getString(R.string.pref_search_top_rated_label));
         } else {
-            mCurrentSettingsTextView.setText(getString(R.string.pref_search_most_pop_label));
+            currentSettingsTextView.setText(getString(R.string.pref_search_most_pop_label));
         }
     }
 
@@ -203,8 +202,8 @@ public class MainActivity extends AppCompatActivity implements
      * Show the Empty Message - used when the RecyclerView is Empty
      */
     private void showEmptyMessage() {
-        mEmptyView.setVisibility(View.VISIBLE);
-        mPopMovieLogo.requestFocus();
+        emptyView.setVisibility(View.VISIBLE);
+        popMovieLogo.requestFocus();
     }
 
     /**
@@ -212,8 +211,8 @@ public class MainActivity extends AppCompatActivity implements
      */
 
     private void hideEmptyMessage() {
-        mEmptyView.setVisibility(View.GONE);
-        mPopMovieLogo.clearFocus();
+        emptyView.setVisibility(View.GONE);
+        popMovieLogo.clearFocus();
     }
 
 

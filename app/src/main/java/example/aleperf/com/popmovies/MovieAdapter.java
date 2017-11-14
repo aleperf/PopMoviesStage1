@@ -19,8 +19,8 @@ import example.aleperf.com.popmovies.utilities.NetworkUtils;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder> {
 
-    private Context mContext;
-    private List<Movie> mMovies;
+    private Context context;
+    private List<Movie> movies;
 
 
     /**
@@ -33,7 +33,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
 
 
     MovieAdapter(Context context) {
-        this.mContext = context;
+        this.context = context;
 
     }
 
@@ -41,7 +41,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
     @Override
     public MovieHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        LayoutInflater layoutInflater = LayoutInflater.from(mContext);
+        LayoutInflater layoutInflater = LayoutInflater.from(context);
         View view = layoutInflater.inflate(R.layout.item_list_main, parent, false);
         return new MovieHolder(view);
 
@@ -49,7 +49,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
 
     @Override
     public void onBindViewHolder(MovieHolder holder, int position) {
-        Movie movie = mMovies.get(position);
+        Movie movie = movies.get(position);
         holder.bindMovie(movie);
         ViewCompat.setTransitionName(holder.poster, movie.getMovieId());
 
@@ -57,14 +57,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
 
     @Override
     public int getItemCount() {
-        if (mMovies == null) {
+        if (movies == null) {
             return 0;
         }
-        return mMovies.size();
+        return movies.size();
     }
 
     void setMovieData(List<Movie> data) {
-        mMovies = data;
+        movies = data;
         notifyDataSetChanged();
     }
 
@@ -86,10 +86,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
             if (movie.hasImage()) {
                 String path = movie.getPosterPath();
                 Uri imagePath = NetworkUtils.buildImageUri(path);
-                Picasso.with(mContext).load(imagePath).fit().error(R.drawable.no_preview_pop).into(poster);
+                Picasso.with(context).load(imagePath).fit().error(R.drawable.no_preview_pop).into(poster);
                 movieTitle.setVisibility(View.INVISIBLE);
             } else {// if the movie hasn't a poster load the default image and show the movie title
-                Picasso.with(mContext).load(R.drawable.no_preview_pop).into(poster);
+                Picasso.with(context).load(R.drawable.no_preview_pop).into(poster);
                 movieTitle.setText(movie.getOriginalTitle());
                 movieTitle.setVisibility(View.VISIBLE);
             }
@@ -99,8 +99,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
 
         @Override
         public void onClick(View view) {
-            if (mContext instanceof MoviePosterClickListener) {
-                MoviePosterClickListener listener = (MoviePosterClickListener) mContext;
+            if (context instanceof MoviePosterClickListener) {
+                MoviePosterClickListener listener = (MoviePosterClickListener) context;
                 listener.onClickMoviePoster(getAdapterPosition(), poster);
             }
         }
