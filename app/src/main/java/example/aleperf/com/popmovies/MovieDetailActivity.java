@@ -29,8 +29,10 @@ public class MovieDetailActivity extends AppCompatActivity {
     private String date;
     private double rating;
     private String poster;
+    private String backdrop;
     private String synopsis;
     private boolean movieHasImage;
+    private boolean movieHasBackropImage;
 
 
     @Override
@@ -87,10 +89,28 @@ public class MovieDetailActivity extends AppCompatActivity {
             Picasso.with(this).load(R.drawable.no_preview_pop).fit().noFade().into(posterImage, callback);
         }
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+
+        final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        final int backdropWidth = getResources().getInteger(R.integer.backdrop_img_width);
+        final int backdropHeight = getResources().getInteger(R.integer.backdrop_img_height);
+        if (movieHasBackropImage) {
+            final ImageView img = new ImageView(this);
+            Picasso.with(this).load(NetworkUtils.buildBackdropImageUri(backdrop)).resize(backdropWidth, backdropHeight).centerInside().into(img, new Callback() {
+                @Override
+                public void onSuccess() {
+
+                    toolbar.setBackground(img.getDrawable());
+                }
+
+                @Override
+                public void onError() {
+
+                }
+            });
         }
 
 
@@ -135,8 +155,10 @@ public class MovieDetailActivity extends AppCompatActivity {
         date = movie.getReleaseDate();
         rating = movie.getRating();
         poster = movie.getPosterPath();
+        backdrop = movie.getBackdropPath();
         synopsis = movie.getPlotSynopsis();
         movieHasImage = movie.hasImage();
+        movieHasBackropImage = movie.hasBackdropPath();
     }
 
 }
