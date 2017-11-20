@@ -8,27 +8,39 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="200dp">
 
         <!-- Toolbar is the actual app bar with text and the action items -->
+
+
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@color/detail_toolbar"
+            android:contentInsetEnd="0dp"
+            android:contentInsetLeft="0dp"
+            android:contentInsetRight="0dp"
+            android:contentInsetStart="0dp"
             android:minHeight="@dimen/detail_toolbar_min_h"
+            app:contentInsetEnd="0dp"
+            app:contentInsetLeft="0dp"
+            app:contentInsetRight="0dp"
+            app:contentInsetStart="0dp"
             app:elevation="@dimen/toolbar_elevation"
             app:layout_scrollFlags="scroll|enterAlways">
 
             <TextView
-                android:id="@+id/header_title_detail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="start"
-                android:textColor="@color/detail_header_title"
-                android:textSize="@dimen/detail_header_title"
-                tools:text="@string/tool_movie_title"/>
-
+                    android:id="@+id/header_title_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginStart="24dp"
+                    android:elevation="20dp"
+                    android:gravity="start"
+                    android:textColor="@color/detail_header_title"
+                    android:textSize="@dimen/detail_header_title"
+                    tools:text="@string/tool_movie_title" />
 
         </android.support.v7.widget.Toolbar>
 
@@ -50,28 +62,28 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingBottom="@dimen/padding_bottom_ll"
-                android:paddingLeft="@dimen/padding_start_end_ll"
-                android:paddingStart="@dimen/padding_start_end_ll"
-                android:paddingRight="@dimen/detail_general_padding"
                 android:paddingEnd="@dimen/detail_general_padding"
+                android:paddingLeft="@dimen/padding_start_end_ll"
+                android:paddingRight="@dimen/detail_general_padding"
+                android:paddingStart="@dimen/padding_start_end_ll"
                 android:paddingTop="@dimen/padding_top_ll">
 
                 <ImageView
                     android:id="@+id/movie_poster_detail"
-                    android:transitionName="poster"
                     android:layout_width="@dimen/movie_poster_width"
                     android:layout_height="@dimen/movie_poster_height"
                     android:contentDescription="@string/cd_movie_poster"
+                    android:transitionName="poster"
                     tools:src="@drawable/no_preview_pop" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingLeft="@dimen/padding_poster_side_content"
-                    android:paddingStart="@dimen/padding_poster_side_content"
-                    android:paddingRight="@dimen/detail_general_padding"
                     android:paddingEnd="@dimen/detail_general_padding"
+                    android:paddingLeft="@dimen/padding_poster_side_content"
+                    android:paddingRight="@dimen/detail_general_padding"
+                    android:paddingStart="@dimen/padding_poster_side_content"
                     android:paddingTop="@dimen/padding_poster_side_content">
 
                     <TextView

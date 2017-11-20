@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<integer name="grid_layout_num_columns">2</integer>
+    <integer name="grid_layout_num_columns">2</integer>
+    <integer name="backdrop_img_width">600</integer>
+    <integer name="backdrop_img_height">200</integer>
 </resources>

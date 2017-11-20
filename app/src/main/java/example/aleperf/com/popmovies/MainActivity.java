@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.SharedElementCallback;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -25,27 +26,30 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity implements
         MovieAdapter.MoviePosterClickListener {
 
     private static final String EXTRA_TAG = "example.aleperf.com.popmovies.selectedMovie";
-
+    private static final String LAST_POS = "last position";
     private ImageView popMovieLogo;
     private LinearLayout emptyView;
     private RecyclerView movieRecyclerView;
     private MovieAdapter adapter;
     private TextView currentSettingsTextView;
-
     private MainActivityViewModel viewModel;
+    private int lastRecyclerViewPos;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        if (savedInstanceState != null) {
+            lastRecyclerViewPos = savedInstanceState.getInt(LAST_POS, 0);
+        }
 
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
@@ -147,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        viewModel.checkPreferencesChanged();
+        boolean havePreferencesChanged = viewModel.checkPreferencesChanged();
         displaySearchSettingsInToolbar();
         List<Movie> movies = viewModel.getMovies().getValue();
         if (movies == null || movies.size() == 0) {
@@ -155,6 +159,12 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             hideEmptyMessage();
         }
+        if (havePreferencesChanged) {
+            lastRecyclerViewPos = 0;
+        } else {
+            movieRecyclerView.smoothScrollToPosition(lastRecyclerViewPos);
+        }
+
     }
 
 
@@ -181,6 +191,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onClickMoviePoster(int position, ImageView sharedImageView) {
+        lastRecyclerViewPos = position;
         Intent intent = new Intent(this, MovieDetailActivity.class);
         Movie movie = viewModel.getMovies().getValue().get(position);
         intent.putExtra(EXTRA_TAG, movie);
@@ -215,7 +226,11 @@ public class MainActivity extends AppCompatActivity implements
         popMovieLogo.clearFocus();
     }
 
-
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(LAST_POS, lastRecyclerViewPos);
+    }
 }
 
 

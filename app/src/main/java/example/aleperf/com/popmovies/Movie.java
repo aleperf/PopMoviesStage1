@@ -80,7 +80,7 @@ public class Movie implements Parcelable {
         return NO_IMAGE;
     }
 
-    private String getBackdropPath(){
+    public String getBackdropPath(){
         if(backdropPath != null){
             return backdropPath.replace("/", "");
         }

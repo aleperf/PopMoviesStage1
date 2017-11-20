@@ -30,7 +30,6 @@
     <dimen name="original_title_padding_top">21dp</dimen>
     <dimen name="detail_general_padding">12dp</dimen>
 
-
     <!-- movie detail line separator !-->
     <dimen name="line_separator_width">100dp</dimen>
     <dimen name="line_separator_height">1dp</dimen>

@@ -4,6 +4,7 @@ package example.aleperf.com.popmovies;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Build;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -33,6 +34,8 @@ public class MovieDetailActivity extends AppCompatActivity {
     private String synopsis;
     private boolean movieHasImage;
     private boolean movieHasBackropImage;
+    private String id;
+    private ImageView posterImage;
 
 
     @Override
@@ -57,7 +60,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         TextView ratingTextView = findViewById(R.id.rating_detail);
         TextView originalTitleTextView = findViewById(R.id.original_title);
         TextView synopsisTextView = findViewById(R.id.synopsis_detail);
-        ImageView posterImage = findViewById(R.id.movie_poster_detail);
+        posterImage = findViewById(R.id.movie_poster_detail);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             if (currentMovie != null) {
                 String transitionName = currentMovie.getMovieId();
@@ -129,7 +132,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case android.R.id.home:
-                onBackPressed();
+                supportFinishAfterTransition();
                 return true;
             case R.id.action_settings_detail:
                 Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
@@ -159,6 +162,8 @@ public class MovieDetailActivity extends AppCompatActivity {
         synopsis = movie.getPlotSynopsis();
         movieHasImage = movie.hasImage();
         movieHasBackropImage = movie.hasBackdropPath();
+        id = movie.getMovieId();
     }
+
 
 }

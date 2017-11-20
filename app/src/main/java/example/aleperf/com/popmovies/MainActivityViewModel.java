@@ -8,6 +8,7 @@ import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.preference.PreferenceManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,8 +57,8 @@ public class MainActivityViewModel extends AndroidViewModel {
         return listOfMovies;
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-    public void checkPreferencesChanged() {
+
+    public boolean checkPreferencesChanged() {
         Context context = getApplication().getApplicationContext();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String actualPreference = preferences.getString(context.getString(R.string.pref_search_key), context.getString(R.string.pref_search_most_pop_value));
@@ -67,6 +68,8 @@ public class MainActivityViewModel extends AndroidViewModel {
             listOfMovies.setValue(new ArrayList<Movie>());
             pageToLoad = 1;
             loadMovies();
+            return true;
         }
+        return false;
     }
 }
