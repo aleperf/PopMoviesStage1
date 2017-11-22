@@ -41,11 +41,11 @@ public class JSONUtils {
         @SerializedName("results")
         List<Movie> movieResults;
 
-        List<Movie> getResults() {
+       public  List<Movie> getResults() {
             return movieResults;
         }
 
-        Integer getStatusCode(){
+       public  Integer getStatusCode(){
             return statusCode;
         }
 

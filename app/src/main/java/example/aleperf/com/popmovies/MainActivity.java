@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.app.SharedElementCallback;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -39,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements
     private RecyclerView movieRecyclerView;
     private MovieAdapter adapter;
     private TextView currentSettingsTextView;
+    private GridLayoutManager gridManager;
     private MainActivityViewModel viewModel;
     private int lastRecyclerViewPos;
 
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements
         movieRecyclerView = findViewById(R.id.recycler_view_main);
         //inflate the numbers of columns from resources, based on the screen width in dp
         int numColumn = getResources().getInteger(R.integer.grid_layout_num_columns);
-        GridLayoutManager gridManager = new GridLayoutManager(this, numColumn);
+        gridManager = new GridLayoutManager(this, numColumn);
         movieRecyclerView.setLayoutManager(gridManager);
         adapter = new MovieAdapter(this);
         adapter.setMovieData(mMovies);
@@ -162,6 +162,7 @@ public class MainActivity extends AppCompatActivity implements
         if (havePreferencesChanged) {
             lastRecyclerViewPos = 0;
         } else {
+
             movieRecyclerView.smoothScrollToPosition(lastRecyclerViewPos);
         }
 
@@ -229,7 +230,14 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(LAST_POS, lastRecyclerViewPos);
+        int firstPositon = gridManager.findFirstVisibleItemPosition();
+        int lastPosition = gridManager.findLastVisibleItemPosition();
+        if (lastRecyclerViewPos >= firstPositon && lastRecyclerViewPos <= lastPosition) {
+            outState.putInt(LAST_POS, lastRecyclerViewPos);
+        } else {
+            outState.putInt(LAST_POS, lastPosition);
+        }
+
     }
 }
 

@@ -2,15 +2,7 @@ package example.aleperf.com.popmovies.utilities;
 
 
 import android.net.Uri;
-import android.support.annotation.Nullable;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Scanner;
 
-import example.aleperf.com.popmovies.BuildConfig;
 
 
 /**
@@ -33,20 +25,7 @@ import example.aleperf.com.popmovies.BuildConfig;
 
 public class NetworkUtils {
 
-    //constants used to build the query to TheMovieDB
-    private static final String MOVIE_DB_BASE_URL = "https://api.themoviedb.org/3/movie";
-    private static final String POPULAR = "popular";
-    private static final String TOP_RATED = "top_rated";
-    //TODO: insert the following line of code, with a valid API KEY between the quotes,
-    // in the gradle.properties file:
-    //  THE_MOVIE_DB_API_KEY = "YOUR API KEY HERE"
-    private static final String MOVIE_DB_API_KEY = BuildConfig.MY_API_KEY;
-    private static final String PARAM_API_KEY = "api_key";
-    private static final String PARAM_PAGE = "page";
 
-    //constants used to decide which url to build
-    private static final String QUERY_MOST_POPULAR = "query most popular";
-    private static final String QUERY_TOP_RATED = "query top rated";
 
     //constants used to build a URL for requesting an image
     private static final String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
@@ -55,91 +34,9 @@ public class NetworkUtils {
     private static final String IMAGE_FORMAT_W500 = "w500";
 
 
-    /**
-     * Build an URL based on the match of queryRequest to predefined constants
-     *
-     * @param queryRequest a String corresponding to a predefined constant in NetwokUtils
-     * @return an URL of "theMovieDB" corresponding to the queryRequest.
-     */
-
-    @Nullable
-    public static URL buildQueryURL(String queryRequest, int page) {
-        Uri requestUri = buildQueryUri2(queryRequest, page);
-        try {
-            return new URL(requestUri.toString());
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            return null;
-        }
-
-    }
 
 
-    /**
-     * Build an Uri for "TheMovieDB" based on the the match of queryRequest to predefined constants,
-     * if no matches is found return the uri for the most popular movies
-     *
-     * @param queryRequest a string  defining the type of uri request
-     * @return an uri corresponding to the type of request
-     */
-    private static Uri buildQueryUri2(String queryRequest, int page) {
-        String searchType;
-        switch (queryRequest) {
-            case QUERY_MOST_POPULAR:
-                searchType = POPULAR;
-                break;
-            case QUERY_TOP_RATED:
-                searchType = TOP_RATED;
-                break;
-            default:
-                searchType = POPULAR;
 
-        }
-
-        return Uri.parse(MOVIE_DB_BASE_URL).buildUpon()
-                .appendPath(searchType)
-                .appendQueryParameter(PARAM_API_KEY, MOVIE_DB_API_KEY)
-                .appendQueryParameter(PARAM_PAGE, String.valueOf(page))
-                .build();
-
-    }
-
-    /**
-     * Open a connection with the url specified as parameter and retrieve
-     * a String representing a JSON query
-     *
-     * @param url the url to open the connection with
-     * @return return a String representing a query in JSON
-     * @throws IOException if the Url is malformed
-     */
-
-    public static String getResponseFromHttpsUrl(URL url) throws IOException {
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-        try {
-            InputStream in = urlConnection.getInputStream();
-
-            Scanner scanner = new Scanner(in);
-            scanner.useDelimiter("\\A");
-
-            boolean hasInput = scanner.hasNext();
-            String response = null;
-            if (hasInput) {
-                response = scanner.next();
-            }
-            scanner.close();
-            return response;
-        } finally {
-            urlConnection.disconnect();
-        }
-    }
-
-    /**
-     * Build an return the uri to a movie poster in TheMovieDb
-     *
-     * @param imagePath the path of a specific image
-     * @return the uri to the image
-     */
     public static Uri buildImageUri(String imagePath) {
         return Uri.parse(IMAGE_BASE_URL).buildUpon()
                 .appendPath(IMAGE_FORMAT_W185).appendPath(imagePath).build();
@@ -150,7 +47,4 @@ public class NetworkUtils {
         return Uri.parse(IMAGE_BASE_URL).buildUpon()
                 .appendPath(IMAGE_FORMAT_W500).appendPath(imagePath).build();
     }
-
-
-
 }
