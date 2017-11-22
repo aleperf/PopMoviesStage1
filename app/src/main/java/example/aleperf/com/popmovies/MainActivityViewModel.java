@@ -54,10 +54,7 @@ public class MainActivityViewModel extends AndroidViewModel {
 
     public MainActivityViewModel(Application application) {
         super(application);
-        Context context = application.getApplicationContext();
         listOfMovies.setValue(new ArrayList<Movie>());
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        lastPreference = preferences.getString(context.getString(R.string.pref_search_key), context.getString(R.string.pref_search_most_pop_value));
         loadMovies();
 
     }
@@ -65,11 +62,10 @@ public class MainActivityViewModel extends AndroidViewModel {
     public void loadMovies() {
         if (pageToLoad <= MAX_PAGE && !isLoading) {
             isLoading = true;
-            Context context = this.getApplication().getApplicationContext();
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-            lastPreference = preferences.getString(context.getString(R.string.pref_search_key), context.getString(R.string.pref_search_most_pop_value));
+            lastPreference = getMoviePreference();
             String preferenceSetting;
-            if (lastPreference.equals(context.getString(R.string.pref_search_most_pop_value))) {
+            if (lastPreference.equals(getApplication().getApplicationContext()
+                    .getString(R.string.pref_search_most_pop_value))) {
                 preferenceSetting = POPULAR;
             } else {
                 preferenceSetting = TOP_RATED;
@@ -84,9 +80,7 @@ public class MainActivityViewModel extends AndroidViewModel {
 
 
     public boolean checkPreferencesChanged() {
-        Context context = getApplication().getApplicationContext();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String actualPreference = preferences.getString(context.getString(R.string.pref_search_key), context.getString(R.string.pref_search_most_pop_value));
+        String actualPreference = getMoviePreference();
         if (!actualPreference.equals(lastPreference)) {
             lastPreference = actualPreference;
             isLoading = false;
@@ -133,5 +127,13 @@ public class MainActivityViewModel extends AndroidViewModel {
                                                 @Query("api_key") String apiKey, @Query("page") String page);
 
 
+    }
+
+    private String getMoviePreference() {
+        Context context = this.getApplication().getApplicationContext();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String currentPreference = preferences.getString(context.getString(R.string.pref_search_key),
+                context.getString(R.string.pref_search_most_pop_value));
+        return currentPreference;
     }
 }
