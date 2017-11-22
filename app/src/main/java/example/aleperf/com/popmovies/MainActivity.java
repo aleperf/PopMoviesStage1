@@ -230,9 +230,9 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        int firstPositon = gridManager.findFirstVisibleItemPosition();
+        int firstPosition = gridManager.findFirstVisibleItemPosition();
         int lastPosition = gridManager.findLastVisibleItemPosition();
-        if (lastRecyclerViewPos >= firstPositon && lastRecyclerViewPos <= lastPosition) {
+        if (lastRecyclerViewPos >= firstPosition && lastRecyclerViewPos <= lastPosition) {
             outState.putInt(LAST_POS, lastRecyclerViewPos);
         } else {
             outState.putInt(LAST_POS, lastPosition);
