@@ -162,8 +162,9 @@ public class MainActivity extends AppCompatActivity implements
         if (havePreferencesChanged) {
             lastRecyclerViewPos = 0;
         } else {
-
-            movieRecyclerView.smoothScrollToPosition(lastRecyclerViewPos);
+            if (movieRecyclerView != null && adapter.getItemCount() > 0) {
+                movieRecyclerView.smoothScrollToPosition(lastRecyclerViewPos);
+            }
         }
 
     }
